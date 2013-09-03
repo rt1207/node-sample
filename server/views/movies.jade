@@ -1,0 +1,27 @@
+
+extends layout
+
+block content
+	div.container
+		table.table.table-bordered.table-striped
+			thead
+				tr
+					th(style='width:40px') #
+					th(style='width:180px') title
+					th(style='width:200px') detail
+					th(style='width:180px') genre
+					//- th(style='width:180px') html
+					th Movie Created
+					th
+			tbody
+			- for (var i = 0; i < accts.length; i++)
+				tr
+					td= i+1
+					td= accts[i].title
+					td= accts[i].detail
+					td= accts[i].genre
+					//- td= accts[i].html
+					td= accts[i].created_at
+					td
+						a(href='/movie/edit/'+accts[i]._id) edit 
+						a(href='/movie/delete/'+accts[i]._id) delete

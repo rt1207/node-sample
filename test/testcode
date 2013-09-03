@@ -1,0 +1,1 @@
+curl -v --header "Content-type: application/json" --request POST --data '{"user": "test","pass":"9987dcba"}' http://localhost:8080

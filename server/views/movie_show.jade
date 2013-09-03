@@ -1,0 +1,27 @@
+
+extends layout
+
+block content
+	div.well.span6(style="margin:0 auto")
+		div(style="margin:10px")!= accts.html
+		table
+			tr
+				td タイトル：
+				td= accts.title
+			tr
+				td 説明：
+				td= accts.detail
+			tr
+				td ジャンル：
+				td= accts.genre
+	include modals/alert
+	include modals/confirm
+
+block scripts
+	script(src='/vendor/jquery.min.js')
+	script(src='/vendor/jquery.form.js')
+	script(src='/vendor/bootstrap-modal.js')
+	script(src='/vendor/bootstrap-transition.js')
+	script(src='/js/views/home.js')
+	script(src='/js/controllers/homeController.js')
+	script(src='/js/form-validators/accountValidator.js')

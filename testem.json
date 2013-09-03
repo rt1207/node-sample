@@ -1,0 +1,18 @@
+{
+  "framework": "mocha",
+  "src_files": [
+    "public/js/*.js",
+    "server/*.js",
+    "test/*.test.js",
+    "*.js"
+  ],
+  "launchers": {
+    "Mocha": {
+      "command": "mocha test/*.test.js -R spec --timeout 3000",
+      "protocol": "spec"
+    }
+  },
+  "launch_in_dev": [
+    "Mocha"
+  ]
+}
