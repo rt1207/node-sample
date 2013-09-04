@@ -23,11 +23,11 @@ $(document).ready(function(){
 	
 // customize the account signup form //
 	
-	$('#account-form h1').text('Signup');
-	$('#account-form #sub1').text('Please tell us a little about yourself');
-	$('#account-form #sub2').text('Choose your username & password');
-	$('#account-form-btn1').html('Cancel');
-	$('#account-form-btn2').html('Submit');
+	$('#account-form h1').text('新規登録');
+	$('#account-form #sub1').text('フォームを入力して下さい。');
+	$('#account-form #sub2').text('');
+	$('#account-form-btn1').html('キャンセル');
+	$('#account-form-btn2').html('送信');
 	$('#account-form-btn2').addClass('btn-primary');
 	
 // setup the alert that displays when an account is successfully created //

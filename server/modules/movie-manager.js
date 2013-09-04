@@ -23,11 +23,9 @@ var movies = db.collection('movies');
 
 exports.addNewMovie = function(newData, callback)
 {
-	console.log('add new: '+newData);
-
 	movies.findOne({title:newData.title}, function(e, o) {
 		if (o){
-			// callback('name-taken');
+			callback('title-taken');
 		}	else{
 					// saltAndHash(newData.pass, function(hash){
 						// newData.pass = hash;
@@ -39,28 +37,20 @@ exports.addNewMovie = function(newData, callback)
 	});
 }
 
-// exports.updatemovie = function(newData, callback)
-// {
-// 	movies.findOne({user:newData.user}, function(e, o){
-// 		o.name 		= newData.name;
-// 		o.email 	= newData.email;
-// 		o.country 	= newData.country;
-// 		if (newData.pass == ''){
-// 			movies.save(o, {safe: true}, function(err) {
-// 				if (err) callback(err);
-// 				else callback(null, o);
-// 			});
-// 		}	else{
-// 			saltAndHash(newData.pass, function(hash){
-// 				o.pass = hash;
-// 				movies.save(o, {safe: true}, function(err) {
-// 					if (err) callback(err);
-// 					else callback(null, o);
-// 				});
-// 			});
-// 		}
-// 	});
-// }
+exports.updateMovie = function(newData, callback)
+{
+	movies.findOne({_id: getObjectId(newData.id)}, function(e, o){
+		o.title 	= newData.title;
+		o.detail 	= newData.detail;
+		o.genre		= newData.genre;
+		o.html 		= newData.html;
+
+		movies.save(o, {safe: true}, function(err) {
+			if (err) callback(err);
+			else callback(null, o);
+		});
+	});
+}
 
 // exports.updatePassword = function(email, newPass, callback)
 // {

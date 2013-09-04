@@ -23,8 +23,8 @@ $(document).ready(function(){
 	
 // customize the account signup form //
 	
-	$('#account-form h1').text('動画情報の作成');
-	$('#account-form #sub1').text('このアプリケーションのDBに追加することができます。');
+	$('#account-form h1').text('動画情報の編集');
+	$('#account-form #sub1').text('このアプリケーションのDBを編集することができます。');
 	$('#account-form #sub2').text('動画情報を入力してください。');
 	$('#account-form-btn1').html('キャンセル');
 	$('#account-form-btn2').html('送信する');
@@ -34,6 +34,6 @@ $(document).ready(function(){
 
 	$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
 	$('.modal-alert .modal-header h3').text('Success!');
-	$('.modal-alert .modal-body p').html('動画作成を完了しました。</br>OKをクリックしてください。');
+	$('.modal-alert .modal-body p').html('動画編集を完了しました。</br>OKをクリックしてください。');
 
 })

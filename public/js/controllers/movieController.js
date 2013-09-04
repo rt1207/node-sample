@@ -2,7 +2,7 @@
 function MovieController()
 {
 // redirect to homepage when cancel button is clicked //
-	$('#account-form-btn1').click(function(){ window.location.href = '/movies/new';});
+	$('#account-form-btn1').click(function(){ window.location.href = '/movies';});
 
 // redirect to homepage on new account creation, add short delay so user can read alert window //
 	$('.modal-alert #ok').click(function(){ setTimeout(function(){window.location.href = '/movies';}, 300)});

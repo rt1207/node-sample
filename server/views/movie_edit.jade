@@ -4,39 +4,38 @@ extends layout
 block content
 
 	// preset form values if we receive a moviedata object //
-	- movie = typeof(udata) != 'undefined' ? udata : { }
-	// store the movieId on the client side in a hidden input field //
-	input(type='hidden', value= movie._id)#movieId
+	- movie = typeof(mdata) != 'undefined' ? mdata : { }
 
 	#account-form-container
 		form( method="post")#account-form.form-horizontal.well.span6
-			h1
-			p#sub1.subheading Please tell us a little about yourself.
+			h1 動画情報の編集
+			p#sub1.subheading このアプリケーションのDBを編集することができます。
 			hr
 			fieldset
 				#title-cg.control-group
-					label.control-label(for='title-tf') title
+					label.control-label(for='title-tf') タイトル
 					.controls
 						input#title-tf.input-xlarge(type='text', name='title', value= movie.title)
 				#detail-cg.control-group
-					label.control-label(for='detail-tf') detail
+					label.control-label(for='detail-tf') 詳細
 					.controls
-						input#detail-tf.input-xlarge(type='text', name='detail', value= movie.detail)
-				#html-cg.control-group
-					label.control-label(for='html-tf') html
-					.controls
-						textarea#html-tf.textarea-xlarge(type='text', name='html', value= movie.html)
+						textarea#detail-tf.input-xlarge(name='detail')= movie.detail
 				#clist-cg.control-group
-					label.control-label(for='genre-list') genre
+					label.control-label(for='genre-list') ジャンル
 					.controls
 						select#genre-list(name='genre')
 							each item in genres
 								option(selected=item.name == movie.genre)= item.name
+				#html-cg.control-group
+					label.control-label(for='html-tf') 動画html
+					.controls
+						textarea#html-tf.input-xlarge(name='html')= movie.html
 				hr
 
 				.form-actions
-					button(type='button')#account-form-btn1.btn 1
-					button(type='submit')#account-form-btn2.btn 2
+					input(type='hidden', name='id', value= movie._id)#movieId
+					button(type='button')#account-form-btn1.btn
+					button(type='submit')#account-form-btn2.btn
 
 	// display form errors in a custom modal window //
 
@@ -48,6 +47,6 @@ block scripts
 	script(src='/vendor/jquery.form.js')
 	script(src='/vendor/bootstrap-modal.js')
 	script(src='/vendor/bootstrap-transition.js')
-	script(src='/js/views/movie.js')
+	script(src='/js/views/movie-edit.js')
 	script(src='/js/controllers/movieController.js')
-	script(src='/js/form-validators/accountValidator.js')
+	script(src='/js/form-validators/movieValidator.js')

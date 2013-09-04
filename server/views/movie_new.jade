@@ -4,34 +4,34 @@ extends layout
 block content
 
 	// preset form values if we receive a moviedata object //
-	- movie = typeof(udata) != 'undefined' ? udata : { }
+	- movie = typeof(mdata) != 'undefined' ? mdata : { }
 	// store the movieId on the client side in a hidden input field //
 	input(type='hidden', value= movie._id)#movieId
 
 	#account-form-container
 		form( method="post")#account-form.form-horizontal.well.span6
 			h1
-			p#sub1.subheading Please tell us a little about yourself.
+			p#sub1.subheading
 			hr
 			fieldset
 				#title-cg.control-group
-					label.control-label(for='title-tf') title
+					label.control-label(for='title-tf') タイトル
 					.controls
 						input#title-tf.input-xlarge(type='text', name='title', value= movie.title)
 				#detail-cg.control-group
-					label.control-label(for='detail-tf') detail
+					label.control-label(for='detail-tf') 詳細
 					.controls
-						input#detail-tf.input-xlarge(type='text', name='detail', value= movie.detail)
-				#html-cg.control-group
-					label.control-label(for='html-tf') html
-					.controls
-						textarea#html-tf.textarea-xlarge(type='text', name='html', value= movie.html)
+						textarea#detail-tf.input-xlarge(name='detail', value= movie.detail)
 				#clist-cg.control-group
-					label.control-label(for='genre-list') genre
+					label.control-label(for='genre-list') ジャンル
 					.controls
 						select#genre-list(name='genre')
 							each item in genres
 								option(selected=item.name == movie.genre)= item.name
+				#html-cg.control-group
+					label.control-label(for='html-tf') 動画html
+					.controls
+						textarea#html-tf.textarea-xlarge(name='html', value= movie.html)
 				hr
 
 				.form-actions

@@ -1,5 +1,5 @@
 var CT = require('./modules/country-list');
-var GR = require('./modules/genre-list');
+var GL = require('./modules/genre-list');
 var AM = require('./modules/account-manager');
 var EM = require('./modules/email-dispatcher');
 var MM = require('./modules/movie-manager');
@@ -233,13 +233,13 @@ module.exports = function(app) {
 // 		})
 // 	});
 
-// // movie create //
+// ----- movie ----- //
 
 	app.get('/movies/:id?',
 		function(req, res) {
 			if(req.params.id=='new'){
 
-				res.render('movie_new', {  title: 'New Movie', genres: GR });
+				res.render('movie_new', {  title: 'New Movie', genres: GL });
 
 			}else if(req.params.id==undefined){
 
@@ -279,18 +279,33 @@ module.exports = function(app) {
 
 	app.get('/movies/edit/:id', function(req, res){
 			MM.getMovieById(req.params.id, function(movie){
-				res.render('movie_edit', {  title: 'Edit Movie', accts: movie });
+				res.render('movie_edit', {  title: 'Edit Movie', genres: GL, mdata: movie });
 			});
 	});
 
 	app.post('/movies/edit/:id', function(req, res){
-		// update
+		if (req.param('id') == req.params.id) {
+			MM.updateMovie({
+				id			: req.param('id'),
+				title 		: req.param('title'),
+				detail 		: req.param('detail'),
+				genre 		: req.param('genre'),
+				html 		: req.param('html')
+			}, function(e, o){
+				if (e){
+					res.send('error-updating-account', 400);
+				}	else{
+					res.send('ok', 200);
+				}
+			});
+		}
 	});
 
 	app.get('/movies/delete/:id', function(req, res){
-		MM.deleteMovie(req.params.id, function(e, obj){
+		MM.deleteMovie(req.params.id, function(e){
 			if (!e){
 				res.send('ok', 200);
+				res.redirect('/movies');
 			}	else{
 				res.send('record not found', 400);
 			}

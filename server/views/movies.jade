@@ -7,11 +7,11 @@ block content
 			thead
 				tr
 					th(style='width:40px') #
-					th(style='width:180px') title
-					th(style='width:200px') detail
-					th(style='width:180px') genre
+					th(style='width:180px') タイトル
+					th(style='width:200px') 詳細
+					th(style='width:180px') ジャンル
 					//- th(style='width:180px') html
-					th Movie Created
+					th 作成日
 					th
 			tbody
 			- for (var i = 0; i < accts.length; i++)
@@ -23,5 +23,5 @@ block content
 					//- td= accts[i].html
 					td= accts[i].created_at
 					td
-						a(href='/movie/edit/'+accts[i]._id) edit 
-						a(href='/movie/delete/'+accts[i]._id) delete
+						a(href='/movies/edit/'+accts[i]._id) 編集 
+						a(href='/movies/delete/'+accts[i]._id) 削除

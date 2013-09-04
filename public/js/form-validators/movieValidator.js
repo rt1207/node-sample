@@ -49,10 +49,10 @@ MovieValidator.prototype.showInvalidEmail = function()
 	this.showErrors(['That email address is already in use.']);
 }
 
-MovieValidator.prototype.showInvalidUserName = function()
+MovieValidator.prototype.showInvalidTitle = function()
 {
 	this.controlGroups[2].addClass('error');
-	this.showErrors(['That username is already in use.']);
+	this.showErrors(['That title is already in use.']);
 }
 
 MovieValidator.prototype.validateForm = function()
