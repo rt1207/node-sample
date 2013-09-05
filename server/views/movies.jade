@@ -3,6 +3,7 @@ extends layout
 block content
 	div.container
 		table.table.table-bordered.table-striped
+			caption 動画一覧
 			thead
 				tr
 					th(style='width:40px') #
@@ -11,7 +12,7 @@ block content
 					th(style='width:180px') ジャンル
 					//- th(style='width:180px') html
 					th 作成日
-					th
+					th(style='width:100px')
 			tbody
 			- for (var i = 0; i < accts.length; i++)
 				tr
@@ -23,5 +24,5 @@ block content
 					//- td= accts[i].html
 					td= accts[i].created_at
 					td
-						a(href='/movies/edit/'+accts[i]._id) 編集 
-						a(href='/movies/delete/'+accts[i]._id) 削除
+						a(href='/movies/edit/'+accts[i]._id).btn 編集
+						a(href='/movies/delete/'+accts[i]._id).btn.btn-danger 削除
