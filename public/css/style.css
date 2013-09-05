@@ -19,6 +19,9 @@ body {
 #global-nav .brand {
   letter-spacing: 2px;
 }
+#global-nav .icon-white {
+  margin-right: 5px;
+}
 #login-container {
   width: 340px;
   margin: 160px auto;

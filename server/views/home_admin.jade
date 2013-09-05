@@ -2,20 +2,7 @@
 extends layout
 
 block content
-	div.well(style="margin:0 auto;width:460px")
-		div(style="margin:10px")!= accts.html
-		table
-			tr
-				td タイトル：
-				td= accts.title
-			tr
-				td 詳細：
-				td= accts.detail
-			tr
-				td ジャンル：
-				td= accts.genre
-		button(onclick='history.back(); return false;') 戻る
-
+	p admin home
 	include modals/alert
 	include modals/confirm
 

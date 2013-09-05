@@ -20,7 +20,7 @@ $(document).ready(function(){
 			if (status == 'success') window.location.href = '/';
 		},
 		error : function(e){
-            lv.showLoginError('Login Failure', 'Please check your username and/or password');
+            lv.showLoginError('ログインに失敗しました。', 'ユーザ名、パスワードを確認して下さい。');
 		}
 	}); 
 	$('#user-tf').focus();
@@ -36,12 +36,12 @@ $(document).ready(function(){
 				ev.hideEmailAlert();
 				return true;
 			}	else{
-				ev.showEmailAlert("<b> Error!</b> Please enter a valid email address");
+				ev.showEmailAlert("<b>エラー：</b> 有効なメールアドレスを入力して下さい。");
 				return false;
 			}
 		},
 		success	: function(responseText, status, xhr, $form){
-			ev.showEmailSuccess("Check your email on how to reset your password.");
+			ev.showEmailSuccess("パスワードの再発行についてはメールをご確認下さい。");
 		},
 		error : function(){
 			ev.showEmailAlert("Sorry. There was a problem, please try again later.");

@@ -10,6 +10,7 @@ block content
 			input(type="text", name="user", id='user-tf').span4.required
 			label パスワード
 			input(type="password", name="pass", id='pass-tf').span4.required
+			input(type="hidden", name="auth", value='1')
 			button(type="submit")#btn-login.btn.btn-primary
 				i.icon-lock.icon-white
 				| ログイン
@@ -19,7 +20,7 @@ block content
 			hr
 			div.btm-links
 				a(href='#')#forgot-password パスワードの再発行
-				a(href='/signup')#create-account 新規登録
+				a(href='/admin/signup')#create-account 新規登録
 
 	include modals/alert
 	include modals/lost-password
