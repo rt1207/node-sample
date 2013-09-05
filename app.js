@@ -1,6 +1,7 @@
 
 var express = require('express');
 var http = require('http');
+// var models = require('server');
 var app = express();
 
 app.configure(function(){
@@ -19,6 +20,15 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
+	// models.init('localhost','pc_dev')
+	app.use(express.errorHandler({dumpExceptions:true,showStack:true}));
+});
+app.configure('production', function(){
+	// models.init('localhost','pc_prod')
+	app.use(express.errorHandler());
+});
+app.configure('test', function(){
+	// models.init('localhost','pc_test')
 	app.use(express.errorHandler());
 });
 
