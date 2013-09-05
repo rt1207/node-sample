@@ -3,7 +3,7 @@ extends layout
 
 block content
 	div.well(style="margin:0 auto;width:500px")
-		div(style="margin:10px")!= accts.html
+		div.movie!= accts.html
 		table
 			tr
 				td タイトル：
@@ -14,7 +14,7 @@ block content
 			tr
 				td ジャンル：
 				td= accts.genre
-		button(onclick='history.back(); return false;') 戻る
+		button(onclick='history.back(); return false;').btn.btn-back 戻る
 
 	include modals/alert
 	include modals/confirm
