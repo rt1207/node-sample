@@ -4,8 +4,13 @@ html
 		title Sample
 		link(rel='shortcut icon', href='/img/16-16.ico')
 		link(rel='apple-touch-icon', href='/img/pd.png')
+		link(rel='stylesheet', href='/vendor/reset.css')
 		link(rel='stylesheet', href='/vendor/bootstrap.min.css')
 		link(rel='stylesheet', href='/css/style.css')
+		<!--[if lt IE 9]>
+		script(src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+		script(src="/vender/css3-mediaqueries.js")
+		<![endif]-->
 	body
 		div.navbar.navbar-fixed-top
 			div.navbar-inner
@@ -15,13 +20,16 @@ html
 							a(href='/').brand Sample
 
 		block content
-
-include modals/alert
-block scripts
-	script(src='/vendor/jquery.min.js')
-	script(src='/vendor/jquery.form.js')
-	script(src='/vendor/bootstrap-modal.js')
-	script(src='/vendor/bootstrap-transition.js')
-	script(src='/js/views/movie.js')
-	script(src='/js/controllers/movieController.js')
-	script(src='/js/form-validators/movieValidator.js')
+		include modals/alert
+		block scripts
+			script(src='/vendor/jquery.min.js')
+			script(src='/vendor/jquery.form.js')
+			script(src='/vendor/bootstrap-modal.js')
+			script(src='/vendor/bootstrap-transition.js')
+			script(src='/js/views/movie.js')
+			script(src='/js/controllers/movieController.js')
+			script(src='/js/form-validators/movieValidator.js')
+			<!--[if lt IE 9]>
+			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+			<script type="text/javascript" src="<?php echo base_url('lib/js/css3-mediaqueries.js'); ?>"></script>
+			<![endif]-->

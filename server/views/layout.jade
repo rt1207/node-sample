@@ -3,8 +3,14 @@ html
 	head
 		title Sample
 		link(rel='shortcut icon', href='/img/16-16.ico')
+		link(rel='apple-touch-icon', href='/img/pd.png')
+		link(rel='stylesheet', href='/vendor/reset.css')
 		link(rel='stylesheet', href='/vendor/bootstrap.min.css')
 		link(rel='stylesheet', href='/css/style.css')
+		<!--[if lt IE 9]>
+		script(src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+		script(src="/js/css3-mediaqueries.js")
+		<![endif]-->
 	body
 		div.navbar.navbar-fixed-top
 			div.navbar-inner
