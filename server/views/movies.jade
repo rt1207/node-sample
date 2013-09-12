@@ -15,7 +15,7 @@ block content
 					if user.admin==1
 						th(style='width:100px')
 			tbody
-			if movies!=undefined
+			if typeof(movies)!=undefined
 				- for (var i = 0; i < movies.length; i++)
 					tr
 						td= i+1
