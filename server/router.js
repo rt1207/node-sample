@@ -267,8 +267,8 @@ module.exports = function(app) {
 			}else if(req.params.id==undefined){
 
 				MM.getAllRecords(
-					function(e, movies){
-						res.render('movies', { title : 'Movie List', movies : movies, auth: req.session.user , user : req.session.user });
+					function(e, obj){
+						res.render('movies', { title : 'Movie List', movies : obj, auth: req.session.user , user : req.session.user });
 					}
 				)
 
