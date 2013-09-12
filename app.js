@@ -9,6 +9,7 @@ var options = {
     key: fs.readFileSync('key.pem'),
     cert: fs.readFileSync('cert.pem')
 };
+var host = 'http://50.112.250.222/';
 
 app.configure(function(){
 	app.set('port', 3000);
@@ -49,6 +50,6 @@ https.createServer(options,app).listen(app.get('port'), function(){
 // set up plain http server
 var http = express.createServer();
 http.get('*',function(req,res){  
-    res.redirect('https://localhost:'+app.get('port')+req.path)
+    res.redirect('https://50.112.250.222:'+app.get('port')+req.path)
 })
 http.listen(8080);
