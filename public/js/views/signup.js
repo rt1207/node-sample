@@ -32,8 +32,8 @@ $(document).ready(function(){
 	
 // setup the alert that displays when an account is successfully created //
 
-	$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
+	$('.modal-alert').modal({ show : false, keyboard : true, backdrop : 'static' });
 	$('.modal-alert .modal-header h3').text('Success!');
-	$('.modal-alert .modal-body p').html('Your account has been created.</br>Click OK to return to the login page.');
+	$('.modal-alert .modal-body p').html('アカウント申請を完了しました。</br>ログインページヘ移動します。');
 
 })

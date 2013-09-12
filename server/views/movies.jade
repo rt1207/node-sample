@@ -12,19 +12,21 @@ block content
 					th(style='width:180px') ジャンル
 					//- th(style='width:180px') html
 					th 作成日
-					th(style='width:100px')
+					if user.admin==1
+						th(style='width:100px')
 			tbody
-			- for (var i = 0; i < accts.length; i++)
+			- for (var i = 0; i < movies.length; i++)
 				tr
 					td= i+1
 					td
-						a(href='/movies/'+accts[i]._id)= accts[i].title
-					td= accts[i].detail
-					td= accts[i].genre
-					//- td= accts[i].html
-					td= accts[i].created_at
-					td
-						a(href='/movies/edit/'+accts[i]._id).btn 編集
-						a(href='/movies/delete/'+accts[i]._id, onclick='return check()').btn.btn-danger 削除
+						a(href='/movies/'+movies[i]._id)= movies[i].title
+					td= movies[i].detail
+					td= movies[i].genre
+					//- td= movies[i].html
+					td= movies[i].created_at
+					if user.admin==1
+						td
+							a(href='/movies/edit/'+movies[i]._id).btn 編集
+							a(href='/movies/delete/'+movies[i]._id, onclick='return check()').btn.btn-danger 削除
 
 	script function check(){ return (window.confirm('送信してよろしいですか？'))?true:false;}

@@ -1,11 +1,17 @@
 
 var express = require('express');
-var http = require('http');
+var https = require('https');
+var fs = require('fs');
 // var models = require('server');
+
 var app = express();
+var options = { 
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
 
 app.configure(function(){
-	app.set('port', 8080);
+	app.set('port', 3000);
 	app.set('views', __dirname + '/server/views');
 	app.set('view engine', 'jade');
 	app.locals.pretty = true;
@@ -34,6 +40,15 @@ app.configure('test', function(){
 
 require('./server/router')(app);
 
-http.createServer(app).listen(app.get('port'), function(){
-	console.log("Express server listening on port " + app.get('port'));
+https.createServer(options,app).listen(app.get('port'), function(){
+	console.log(Date());
+	console.log("Express server listening on https port " + app.get('port'));
+	console.log("Express server listening on http port 8080");
 })
+
+// set up plain http server
+var http = express.createServer();
+http.get('*',function(req,res){  
+    res.redirect('https://localhost:'+app.get('port')+req.path)
+})
+http.listen(8080);

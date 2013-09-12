@@ -1,6 +1,6 @@
 
 // preset form values if we receive a userdata object //
-- user = typeof(udata) != 'undefined' ? udata : { }
+- user = typeof(user) != 'undefined' ? user : { }
 // store the userId on the client side in a hidden input field //
 input(type='hidden', value= user._id)#userId
 
@@ -19,15 +19,13 @@ input(type='hidden', value= user._id)#userId
 				.controls
 					input#email-tf.input-xlarge(type='text', name='email', value= user.email)
 			#clist-cg.control-group
-				label.control-label(for='country-list') 地域
+				label.control-label(for='country-list') 会社名
 				.controls
-					select#country-list(name='country')
-						each item in countries
-							option(selected=item.name == user.country)= item.name
+					input#name-tf.input-xlarge(type='text', name='country', value= user.country)
 			hr
 			p#sub2.subheading
 			#user-cg.control-group
-				label.control-label(for='user-tf') ユーザ名
+				label.control-label(for='user-tf') ユーザ名（消す）
 				.controls
 					input#user-tf.input-xlarge.disabled(type='text', name='user', value= user.user)
 			#pass-cg.control-group

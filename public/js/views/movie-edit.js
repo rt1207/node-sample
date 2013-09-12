@@ -32,7 +32,7 @@ $(document).ready(function(){
 	
 // setup the alert that displays when an account is successfully created //
 
-	$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
+	$('.modal-alert').modal({ show : false, keyboard : true, backdrop : 'static' });
 	$('.modal-alert .modal-header h3').text('Success!');
 	$('.modal-alert .modal-body p').html('動画編集を完了しました。</br>OKをクリックしてください。');
 

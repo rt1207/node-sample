@@ -48,4 +48,5 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('.modal-alert').modal({ show : false, keyboard : true, backdrop : 'static' });
 })

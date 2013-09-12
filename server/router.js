@@ -3,28 +3,29 @@ var GL = require('./modules/genre-list');
 var AM = require('./modules/account-manager');
 var EM = require('./modules/email-dispatcher');
 var MM = require('./modules/movie-manager');
+var VC = require('./modules/video-cloud');
+
+var sessionCheck = function( o, route, callback ){ if (o == null) callback(route) }
 
 module.exports = function(app) {
 
-// main login page //
+// ------------------------------ main login page ------------------------------ //
 
 	app.get('/', function(req, res){
-	// check if the user's credentials are saved in a cookie //
 		if (req.cookies.user == undefined || req.cookies.pass == undefined){
-			res.render('login', { title: 'Hello - Please Login To Your Account' });
+			res.render('login', { title: 'Hello - Please Login To Your Account'});
 		}	else{
-	// attempt automatic login //
 			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
 				if (o != null){
 				    req.session.user = o;
-					res.redirect('/movies');
+					res.redirect('/home');
 				}	else{
-					res.render('login', { title: 'Hello - Please Login To Your Account' });
+					res.render('login', { title: 'Hello - Please Login To Your Account'});
 				}
 			});
 		}
 	});
-	
+
 	app.post('/', function(req, res){
 		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
 			if (!o){
@@ -40,21 +41,21 @@ module.exports = function(app) {
 		});
 	});
 
-// logged-in user homepage //
-	
+
+// ------------------------------ logged-in user homepage ------------------------------ //
+
 	app.get('/home', function(req, res) {
 	    if (req.session.user == null){
-	// if user is not logged-in redirect back to login page //
 	        res.redirect('/');
 	    }   else{
 			res.render('home', {
 				title : 'Control Panel',
 				countries : CT,
-				udata : req.session.user
+				user : req.session.user
 			});
 	    }
 	});
-	
+
 	app.post('/home', function(req, res){
 		if (req.param('user') != undefined) {
 			AM.updateAccount({
@@ -68,11 +69,10 @@ module.exports = function(app) {
 					res.send('error-updating-account', 400);
 				}	else{
 					req.session.user = o;
-			// update the user's login cookies if they exists //
 					if (req.cookies.user != undefined && req.cookies.pass != undefined){
 						res.cookie('user', o.user, { maxAge: 900000 });
-						res.cookie('pass', o.pass, { maxAge: 900000 });	
-					}
+						res.cookie('pass', o.pass, { maxAge: 900000 });
+											}
 					res.send('ok', 200);
 				}
 			});
@@ -82,39 +82,71 @@ module.exports = function(app) {
 			req.session.destroy(function(e){ res.send('ok', 200); });
 		}
 	});
-	
-// creating new accounts //
-	
+
+
+// ------------------------------ creating new accounts ------------------------------ //
+
 	app.get('/signup', function(req, res) {
-		res.render('signup', {  title: 'Signup', countries : CT });
+		res.render('signup', {  title: 'Signup', countries : CT , user : req.session.user });
 	});
-	
+
 	app.post('/signup', function(req, res){
-		AM.addNewAccount({
+		o = {
 			name 	: req.param('name'),
 			email 	: req.param('email'),
 			user 	: req.param('user'),
 			pass	: req.param('pass'),
 			country : req.param('country')
-		}, function(e){
+		};
+
+		AM.accountValidation(o, function(e,m){
 			if (e){
 				res.send(e, 400);
 			}	else{
-				res.send('ok', 200);
+				EM.accountRequest(o, function(e, m){
+						if (!e) {
+							res.send('ok', 200);
+						}	else{
+							res.send('email-server-error', 400);
+							for (k in e) console.log('error : ', k, e[k]);
+						}
+					}
+				);
 			}
 		});
 	});
 
-// password reset //
+
+// ------------------------------ registration by admin ------------------------------ //
+
+	app.get('/register', function(req, res) {
+		if(req.query["t"]=='token'){
+
+			AM.addNewAccount({
+				name    : req.query["n"],
+				email   : req.query["e"],
+				user    : req.query["u"],
+				pass    : req.query["p"],
+				country : req.query["c"]
+			}, function(e){
+				if (e){
+					res.send(e, 400);
+				}	else{
+					res.send('ok', 200);
+				}
+			});
+
+		}else{res.send('failed', 400)}
+	});
+
+
+// ------------------------------ password reset ------------------------------ //
 
 	app.post('/lost-password', function(req, res){
-	// look up the user's account via their email //
 		AM.getAccountByEmail(req.param('email'), function(o){
 			if (o){
 				res.send('ok', 200);
 				EM.dispatchResetPasswordLink(o, function(e, m){
-				// this callback takes a moment to return //
-				// should add an ajax loader to give user feedback //
 					if (!e) {
 					//	res.send('ok', 200);
 					}	else{
@@ -135,18 +167,15 @@ module.exports = function(app) {
 			if (e != 'ok'){
 				res.redirect('/');
 			} else{
-	// save the user's email in a session instead of sending to the client //
 				req.session.reset = { email:email, passHash:passH };
-				res.render('reset', { title : 'Reset Password' });
+				res.render('reset', { title : 'Reset Password' , user : req.session.user });
 			}
 		})
 	});
-	
+
 	app.post('/reset-password', function(req, res) {
 		var nPass = req.param('pass');
-	// retrieve the user's email from the session to lookup their account and reset password //
 		var email = req.session.reset.email;
-	// destory the session immediately after retrieving the stored email //
 		req.session.destroy();
 		AM.updatePassword(email, nPass, function(e, o){
 			if (o){
@@ -156,16 +185,19 @@ module.exports = function(app) {
 			}
 		})
 	});
-	
-// view & delete accounts //
-	
+
+
+// ------------------------------ view & delete accounts ------------------------------ //
+
 	app.get('/accounts', function(req, res) {
+		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		AM.getAllRecords( function(e, accounts){
-			res.render('print', { title : 'Account List', accts : accounts });
-		})
+			res.render('print', { title : 'Account List', accts : accounts , user : req.session.user });
+		});
 	});
-	
+
 	app.post('/delete', function(req, res){
+		// AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		AM.deleteAccount(req.body.id, function(e, obj){
 			if (!e){
 				res.clearCookie('user');
@@ -176,78 +208,67 @@ module.exports = function(app) {
 			}
 	    });
 	});
-	
-	app.get('/reset', function(req, res) {
-		AM.delAllRecords(function(){
-			res.redirect('/print');	
-		});
-	});
-	
-	// app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
-// administrator login page //
+	// app.get('/reset', function(req, res) {
+	// 	AM.authCheck(req.session.user, function(route){res.redirect(route)});
+	// 	AM.delAllRecords(function(){
+	// 		res.redirect('/print');
+	// 				});
+	// });
+
+
+// ------------------------------ administrator login page ------------------------------ //
 
 	app.get('/admin', function(req, res){
-	// check if the user's credentials are saved in a cookie //
 		if (req.cookies.user == undefined || req.cookies.pass == undefined){
-			res.render('login_admin', { title: 'Hello - Please Login To Your Account' });
+			res.render('login', { title: 'Administrator' , user : req.session.user });
 		}	else{
-	// attempt automatic login //
 			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
-				if (o != null&&o.auth==1){
+				if (o != null&&o.admin==1){
 				    req.session.user = o;
-					res.redirect('/home_admin');
+					res.redirect('/home');
 				}	else{
-					res.render('login_admin', { title: 'Hello - Please Login To Your Account' });
+					res.render('login', { title: 'Administrator' , user : req.session.user });
 				}
 			});
 		}
 	});
-	
+
 	app.post('/admin', function(req, res){
 		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
 			if (!o){
 				res.send(e, 400);
 			}	else{
-				if(o.admin=='1'){
-					console.log('admin');
-				 //    req.session.user = o;
+				if(o.admin==1){
+				    req.session.user = o;
 					if (req.param('remember-me') == 'true'){
 						res.cookie('user', o.user, { maxAge: 900000 });
 						res.cookie('pass', o.pass, { maxAge: 900000 });
 						res.send(o, 200);
 					}
+				}else{
+					res.send(e,400)
 				}
 			}
 		});
 	});
 
-// account detail, movie detail //
 
-	// app.get('/movies/id', function(req, res) {
-	// }
+// ------------------------------ movie - new, list, show ------------------------------ //
 
-// movie list, movie detail, movie create //
+	app.get('/movies/:id?', function(req, res) {
+		sessionCheck(req.session.user,'/', function(route){res.redirect(route)});
 
-// 	app.get('/movies', function(req, res) {
-// 		MM.getAllRecords( function(e, movies){
-// 			res.render('print', { title : 'Movie List', accts : movies });
-// 		})
-// 	});
-
-// ----- movie ----- //
-
-	app.get('/movies/:id?',
-		function(req, res) {
 			if(req.params.id=='new'){
+				AM.authCheck(req.session.user, function(route){res.redirect(route)});
 
-				res.render('movie_new', {  title: 'New Movie', genres: GL });
+				res.render('movie_new', {  title: 'New Movie', genres: GL , user : req.session.user });
 
 			}else if(req.params.id==undefined){
 
 				MM.getAllRecords(
 					function(e, movies){
-						res.render('movies', { title : 'Movie List', accts : movies });
+						res.render('movies', { title : 'Movie List', movies : movies, auth: req.session.user , user : req.session.user });
 					}
 				)
 
@@ -257,14 +278,15 @@ module.exports = function(app) {
 					if(movie==undefined) {
 						res.send('movie-not-found', 400);
 					}else{
-						res.render('movie_show', {  title: 'Show Movie', accts : movie });
+						res.render('movie_show', {  title: 'Show Movie', accts : movie , user : req.session.user });
 					}
 				})
 			}
-		}
-	);
+
+	});
 
 	app.post('/movies/new', function(req, res){
+		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		MM.addNewMovie({
 			title 	: req.param('title'),
 			detail 	: req.param('detail'),
@@ -279,13 +301,18 @@ module.exports = function(app) {
 		});
 	});
 
+
+// ------------------------------ movie - edit, delete ------------------------------ //
+
 	app.get('/movies/edit/:id', function(req, res){
+		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 			MM.getMovieById(req.params.id, function(movie){
-				res.render('movie_edit', {  title: 'Edit Movie', genres: GL, mdata: movie });
+				res.render('movie_edit', {  title: 'Edit Movie', genres: GL, mdata: movie , user : req.session.user });
 			});
 	});
 
 	app.post('/movies/edit/:id', function(req, res){
+		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		if (req.param('id') == req.params.id) {
 			MM.updateMovie({
 				id			: req.param('id'),
@@ -304,6 +331,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/movies/delete/:id', function(req, res){
+		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		MM.deleteMovie(req.params.id, function(e){
 			if (!e){
 				res.send('ok', 200);
@@ -314,4 +342,7 @@ module.exports = function(app) {
 	    });
 	});
 
-};
+
+// ------------------------------ - ------------------------------ //
+
+}

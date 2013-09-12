@@ -52,6 +52,24 @@ exports.manualLogin = function(user, pass, callback)
 
 /* record insertion, update & deletion methods */
 
+exports.accountValidation = function(newData, callback)
+{
+	accounts.findOne({user:newData.user}, function(e, o) {
+		if (o){
+			callback('username-taken');
+		}	else{
+			accounts.findOne({email:newData.email}, function(e, o) {
+				if (o){
+					callback('email-taken');
+				}	else{
+						newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
+						callback(null,newData);
+				}
+			});
+		}
+	});
+}
+
 exports.addNewAccount = function(newData, callback)
 {
 	accounts.findOne({user:newData.user}, function(e, o) {
@@ -203,8 +221,11 @@ var findByMultipleFields = function(a, callback)
 
 // check if a user has admin-auth //
 
-exports.adminAuth = function(u)
+exports.authCheck = function(o, callback)
 {
-	user = accounts.find({user:u});
-	return (user.admin!=undefined&&user.admin==1)? true: false;
+	if(o==null){
+		callback('/')
+	}else if(o.admin!=1){
+		callback('/admin')
+	}
 }
