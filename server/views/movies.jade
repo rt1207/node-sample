@@ -1,3 +1,5 @@
+- movies = typeof(movies) != 'undefined' ? movies : { }
+
 extends layout
 
 block content
@@ -15,19 +17,18 @@ block content
 					if user.admin==1
 						th(style='width:100px')
 			tbody
-			if typeof(movies)!=undefined
-				- for (var i = 0; i < movies.length; i++)
-					tr
-						td= i+1
+			- for (var i = 0; i < movies.length; i++)
+				tr
+					td= i+1
+					td
+						a(href='/movies/'+movies[i]._id)= movies[i].title
+					td= movies[i].detail
+					td= movies[i].genre
+					//- td= movies[i].html
+					td= movies[i].created_at
+					if user.admin==1
 						td
-							a(href='/movies/'+movies[i]._id)= movies[i].title
-						td= movies[i].detail
-						td= movies[i].genre
-						//- td= movies[i].html
-						td= movies[i].created_at
-						if user.admin==1
-							td
-								a(href='/movies/edit/'+movies[i]._id).btn 編集
-								a(href='/movies/delete/'+movies[i]._id, onclick='return check()').btn.btn-danger 削除
+							a(href='/movies/edit/'+movies[i]._id).btn 編集
+							a(href='/movies/delete/'+movies[i]._id, onclick='return check()').btn.btn-danger 削除
 
 	script function check(){ return (window.confirm('送信してよろしいですか？'))?true:false;}
