@@ -1,3 +1,43 @@
+// expressのroutesのみrequire
+var routes = require('../server/router');
+
+require('should');
+
+describe('routes', function () {
+    var req, res;
+
+    beforeEach(function () {
+        // 簡単に、フェイクのreqとresを用意
+        req = {};
+        res = {
+            redirect: function () {
+            	return {originalUrl: '/'}
+            },
+            render : function () { }
+        };
+    });
+
+    describe('index', function () {
+        it('should display index page with title', function (done) {
+            // res.render、すなわち表示用に呼ばれる関数をフェイクで作成
+            // 事実上のcallback関数
+            res.render = function (view, vars) {
+                // 'index'というviewを使うことを確認
+                view.should.equal('/');
+
+                // 変数'title'が'Express'になっていることを確認
+                // vars.title.should.eql('Express');
+
+                // テスト終了
+                done();
+            };
+
+            // 実際に、routesのindexを実行 = アクセスしてみる
+            routes.index(req, res);
+        });
+    });
+});
+
 // var should = require('should'),
 //     mongoose = require('mongoose'),
 //     models = require('../models'),

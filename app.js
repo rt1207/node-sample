@@ -1,15 +1,22 @@
+console.log('-----------------------------------------------------------------------');
+console.log('-----------------------------------------------------------------------');
+console.log('--------------- '+Date()+' ---------------');
+console.log('-----------------------------------------------------------------------');
+console.log('-----------------------------------------------------------------------');
 
 var express = require('express');
 var https = require('https');
+var http = require('http');
 var fs = require('fs');
-// var models = require('server');
 
 var app = express();
 var options = { 
     key: fs.readFileSync('key.pem'),
     cert: fs.readFileSync('cert.pem')
 };
-var host = 'https://50.112.250.222:';
+
+var host = 'https://localhost:';
+// var host = 'https://50.112.250.222:';
 
 app.configure(function(){
 	app.set('port', 3000);
@@ -26,30 +33,24 @@ app.configure(function(){
 	app.use(express.static(__dirname + '/public'));
 });
 
-app.configure('development', function(){
-	// models.init('localhost','pc_dev')
-	app.use(express.errorHandler({dumpExceptions:true,showStack:true}));
-});
-app.configure('production', function(){
-	// models.init('localhost','pc_prod')
-	app.use(express.errorHandler());
-});
-app.configure('test', function(){
-	// models.init('localhost','pc_test')
-	app.use(express.errorHandler());
-});
-
 require('./server/router')(app);
 
 https.createServer(options,app).listen(app.get('port'), function(){
-	console.log(Date());
 	console.log("Express server listening on https port " + app.get('port'));
-	console.log("Express server listening on http port 8080");
-})
+});
+
+
 
 // set up plain http server
-// var http = express.createServer();
-// http.get('*',function(req,res){  
-//     res.redirect(host+app.get('port')+req.path)
-// })
-// http.listen(8080);
+var mirror = express();
+mirror.configure(function(){
+	mirror.set('port',8080)
+});
+
+http.createServer(mirror).listen(mirror.get('port'), function(){
+	console.log("Express server listening on http port " + mirror.get('port'));
+});
+
+mirror.get('*',function(req,res){  
+    res.redirect(host+app.get('port')+req.path)
+});
