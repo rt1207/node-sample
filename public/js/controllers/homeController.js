@@ -23,7 +23,7 @@ function HomeController()
 			type: 'POST',
 			data: { id: $('#userId').val()},
 			success: function(data){
-	 			that.showLockedAlert('Your account has been deleted.<br>Redirecting you back to the homepage.');
+	 			that.showLockedAlert('アカウントが削除されました。');
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
@@ -39,7 +39,7 @@ function HomeController()
 			type: "POST",
 			data: {logout : true},
 			success: function(data){
-	 			that.showLockedAlert('You are now logged out.<br>Redirecting you back to the homepage.');
+	 			that.showLockedAlert('ログアウトしました。');
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
@@ -49,7 +49,7 @@ function HomeController()
 
 	this.showLockedAlert = function(msg){
 		$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
-		$('.modal-alert .modal-header h3').text('Success!');
+		$('.modal-alert .modal-header h3').text('成功しました！');
 		$('.modal-alert .modal-body p').html(msg);
 		$('.modal-alert').modal('show');
 		$('.modal-alert button').click(function(){window.location.href = '/';})
@@ -60,8 +60,8 @@ function HomeController()
 HomeController.prototype.onUpdateSuccess = function()
 {
 	$('.modal-alert').modal({ show : false, keyboard : true, backdrop : true });
-	$('.modal-alert .modal-header h3').text('Success!');
-	$('.modal-alert .modal-body p').html('Your account has been updated.');
+	$('.modal-alert .modal-header h3').text('成功しました！');
+	$('.modal-alert .modal-body p').html('アカウント情報が更新されました。');
 	$('.modal-alert').modal('show');
 	$('.modal-alert button').off('click');
 }

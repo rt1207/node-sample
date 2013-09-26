@@ -22,7 +22,7 @@ function MovieController()
 			type: "POST",
 			data: {logout : true},
 			success: function(data){
-	 			that.showLockedAlert('ログアウトしました。<br>ホーム画面へ遷移します。');
+	 			that.showLockedAlert('ログアウトしました。');
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
@@ -32,7 +32,7 @@ function MovieController()
 
 	this.showLockedAlert = function(msg){
 		$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
-		$('.modal-alert .modal-header h3').text('Success!');
+		$('.modal-alert .modal-header h3').text('成功しました！');
 		$('.modal-alert .modal-body p').html(msg);
 		$('.modal-alert').modal('show');
 		$('.modal-alert button').click(function(){window.location.href = '/';})

@@ -24,15 +24,11 @@ html
 								span 動画一覧
 						if user.admin == 1
 							li
-								a(href='/movies/new')
-									span.icon-plus-sign.icon-white
-									span Add Movie
-							li
 								a(href='/accounts')
 									span.icon-user.icon-white
 									span ユーザ一覧
 						li
-							a= user.name
+							a(href='/home')= user.name
 					button#btn-logout.btn.btn-primary
 						i.icon-lock.icon-white
 						| ログアウト
@@ -49,3 +45,4 @@ html
 			script(src='/js/views/movie.js')
 			script(src='/js/controllers/movieController.js')
 			script(src='/js/form-validators/movieValidator.js')
+			script(src='/js/app.js')

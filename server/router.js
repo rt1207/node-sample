@@ -3,7 +3,7 @@ var GL = require('./modules/genre-list');
 var AM = require('./modules/account-manager');
 var EM = require('./modules/email-dispatcher');
 var MM = require('./modules/movie-manager');
-var VC = require('./modules/video-cloud');
+var VC = require('./modules/vc-api');
 
 var sessionCheck = function( o, route, callback ){ if (o == null) callback(route) }
 
@@ -11,29 +11,29 @@ module.exports = function(app) {
 
 // ------------------------------ main login page ------------------------------ //
 
-	app.get('/', function(req, res){console.log(req.originalUrl);
-		if (req.cookies.user == undefined || req.cookies.pass == undefined){
-			res.render('login', { title: 'Hello - Please Login To Your Account'});
+	app.get('/', function(req, res){
+		if (req.cookies.email == undefined || req.cookies.pass == undefined){
+			res.render('login', { title: 'ログイン画面'});
 		}	else{
-			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
+			AM.autoLogin(req.cookies.email, req.cookies.pass, function(o){
 				if (o != null){
 				    req.session.user = o;
 					res.redirect('/home');
 				}	else{
-					res.render('login', { title: 'Hello - Please Login To Your Account'});
+					res.render('login', { title: 'ログイン画面'});
 				}
 			});
 		}
 	});
 
 	app.post('/', function(req, res){
-		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
+		AM.manualLogin(req.param('email'), req.param('pass'), function(e, o){
 			if (!o){
 				res.send(e, 400);
 			}	else{
 			    req.session.user = o;
 				if (req.param('remember-me') == 'true'){
-					res.cookie('user', o.user, { maxAge: 900000 });
+					res.cookie('email', o.email, { maxAge: 900000 });
 					res.cookie('pass', o.pass, { maxAge: 900000 });
 				}
 				res.send(o, 200);
@@ -51,33 +51,36 @@ module.exports = function(app) {
 			res.render('home', {
 				title : 'Control Panel',
 				countries : CT,
-				user : req.session.user
+				user : req.session.user,
+				url: 'home'
 			});
 	    }
 	});
 
 	app.post('/home', function(req, res){
-		if (req.param('user') != undefined) {
+		if (req.param('email') != undefined) {
 			AM.updateAccount({
-				user 		: req.param('user'),
-				name 		: req.param('name'),
 				email 		: req.param('email'),
-				country 	: req.param('country'),
 				pass		: req.param('pass')
+
+	// --------------------- other inserting data here --------------------- //
+
+				// email 		: req.param('email'),
+
 			}, function(e, o){
 				if (e){
 					res.send('error-updating-account', 400);
 				}	else{
 					req.session.user = o;
-					if (req.cookies.user != undefined && req.cookies.pass != undefined){
-						res.cookie('user', o.user, { maxAge: 900000 });
+					if (req.cookies.email != undefined && req.cookies.pass != undefined){
+						res.cookie('email', o.email, { maxAge: 900000 });
 						res.cookie('pass', o.pass, { maxAge: 900000 });
 											}
 					res.send('ok', 200);
 				}
 			});
 		}	else if (req.param('logout') == 'true'){
-			res.clearCookie('user');
+			res.clearCookie('email');
 			res.clearCookie('pass');
 			req.session.destroy(function(e){ res.send('ok', 200); });
 		}
@@ -87,16 +90,15 @@ module.exports = function(app) {
 // ------------------------------ creating new accounts ------------------------------ //
 
 	app.get('/signup', function(req, res) {
-		res.render('signup', {  title: 'Signup', countries : CT , user : req.session.user });
+		res.render('signup', {  title: 'Signup', countries : CT , user : req.session.user,
+				url: 'signup'
+		 });
 	});
 
 	app.post('/signup', function(req, res){
 		o = {
-			name 	: req.param('name'),
 			email 	: req.param('email'),
-			user 	: req.param('user'),
 			pass	: req.param('pass'),
-			country : req.param('country')
 		};
 
 		AM.accountValidation(o, function(e,m){
@@ -123,11 +125,8 @@ module.exports = function(app) {
 		if(req.query["t"]=='token'){
 
 			AM.addNewAccount({
-				name    : req.query["n"],
 				email   : req.query["e"],
-				user    : req.query["u"],
 				pass    : req.query["p"],
-				country : req.query["c"]
 			}, function(e){
 				if (e){
 					res.send(e, 400);
@@ -148,7 +147,7 @@ module.exports = function(app) {
 				res.send('ok', 200);
 				EM.dispatchResetPasswordLink(o, function(e, m){
 					if (!e) {
-					//	res.send('ok', 200);
+						res.send('ok', 200);
 					}	else{
 						res.send('email-server-error', 400);
 						for (k in e) console.log('error : ', k, e[k]);
@@ -192,7 +191,7 @@ module.exports = function(app) {
 	app.get('/accounts', function(req, res) {
 		AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		AM.getAllRecords( function(e, accounts){
-			res.render('print', { title : 'Account List', accts : accounts , user : req.session.user });
+			res.render('print', { title : 'ユーザ一覧', accts : accounts , user : req.session.user });
 		});
 	});
 
@@ -200,7 +199,7 @@ module.exports = function(app) {
 		// AM.authCheck(req.session.user, function(route){res.redirect(route)});
 		AM.deleteAccount(req.body.id, function(e, obj){
 			if (!e){
-				res.clearCookie('user');
+				res.clearCookie('email');
 				res.clearCookie('pass');
 	            req.session.destroy(function(e){ res.send('ok', 200); });
 			}	else{
@@ -220,10 +219,10 @@ module.exports = function(app) {
 // ------------------------------ administrator login page ------------------------------ //
 
 	app.get('/admin', function(req, res){
-		if (req.cookies.user == undefined || req.cookies.pass == undefined){
+		if (req.cookies.email == undefined || req.cookies.pass == undefined){
 			res.render('login', { title: 'Administrator' , user : req.session.user });
 		}	else{
-			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
+			AM.autoLogin(req.cookies.email, req.cookies.pass, function(o){
 				if (o != null&&o.admin==1){
 				    req.session.user = o;
 					res.redirect('/home');
@@ -235,14 +234,14 @@ module.exports = function(app) {
 	});
 
 	app.post('/admin', function(req, res){
-		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
+		AM.manualLogin(req.param('email'), req.param('pass'), function(e, o){
 			if (!o){
 				res.send(e, 400);
 			}	else{
 				if(o.admin==1){
 				    req.session.user = o;
 					if (req.param('remember-me') == 'true'){
-						res.cookie('user', o.user, { maxAge: 900000 });
+						res.cookie('email', o.email, { maxAge: 900000 });
 						res.cookie('pass', o.pass, { maxAge: 900000 });
 						res.send(o, 200);
 					}

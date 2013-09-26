@@ -23,7 +23,7 @@ $(document).ready(function(){
             lv.showLoginError('ログインに失敗しました。', 'ユーザ名、パスワードを確認して下さい。');
 		}
 	}); 
-	$('#user-tf').focus();
+	$('#email-tf').focus();
 	
 // login retrieval form via email //
 	

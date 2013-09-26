@@ -48,7 +48,7 @@ EM.accountRequest = function(account, callback)
 
 EM.composeRequest = function(o)
 {
-	var link = 'http://localhost:8080/register?e='+o.email+'&p='+o.pass+'&n='+o.name+'&u='+o.user+'&c='+o.country+'&t=token';
+	var link = 'https://localhost:3000/register?e='+o.email+'&p='+o.pass+'&t=token';
 	var html = "<html><body>";
 		html += "管理者様<br><br>";
 		html += "ユーザー申請がありました。<br><br>";

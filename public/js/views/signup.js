@@ -6,12 +6,17 @@ $(document).ready(function(){
 	
 	$('#account-form').ajaxForm({
 		beforeSubmit : function(formData, jqForm, options){
-			return av.validateForm();
+			val = av.validateForm();
+			if(val) $('.loading').addClass('waiting');
+			// setTimeout(function(){$('.loading').removeClass('waiting')},12000);
+			return val;
 		},
 		success	: function(responseText, status, xhr, $form){
+			$('.loading').removeClass('waiting');
 			if (status == 'success') $('.modal-alert').modal('show');
 		},
 		error : function(e){
+			$('.loading').removeClass('waiting');
 			if (e.responseText == 'email-taken'){
 			    av.showInvalidEmail();
 			}	else if (e.responseText == 'username-taken'){
@@ -19,7 +24,7 @@ $(document).ready(function(){
 			}
 		}
 	});
-	$('#name-tf').focus();
+	$('#email-tf').focus();
 	
 // customize the account signup form //
 	

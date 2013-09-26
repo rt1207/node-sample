@@ -8,15 +8,17 @@ block content
 			thead
 				tr
 					th(style='width:40px') #
+					th(style='width:180px') E-Mail
 					th(style='width:180px') 名前
-					th(style='width:200px') 地域
+					//- th(style='width:200px') 地域
 					th(style='width:180px') ユーザ名
 					th 作成日
 			tbody
 			- for (var i = 0; i < accts.length; i++)
 				tr
 					td= i+1
+					td= accts[i].email
 					td= accts[i].name
-					td= accts[i].country
+					//- td= accts[i].country
 					td= accts[i].user
 					td= accts[i].date

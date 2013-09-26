@@ -5,9 +5,9 @@ block content
 	#login-container
 		form( method="post")#login-form.well.span4
 			h1 Sample Movies
-			p.subheading= title
-			label ユーザ名
-			input(type="text", name="user", id='user-tf').span4.required
+			//- p.subheading= title
+			label E-Mail
+			input(type="text", name="email", id='email-tf').span4.required
 			label パスワード
 			input(type="password", name="pass", id='pass-tf').span4.required
 			button(type="submit")#btn-login.btn.btn-primary
@@ -21,7 +21,7 @@ block content
 				a(href='#')#forgot-password パスワードの再発行
 				a(href='/signup')#create-account 新規登録
 
-	include modals/alert
+	//- include modals/alert
 	include modals/lost-password
 
 block scripts

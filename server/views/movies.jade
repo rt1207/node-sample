@@ -4,6 +4,10 @@ extends layout
 block content
 	div.container
 		table.table.table-bordered.table-striped
+			if user.admin==1
+				a(href='/movies/new').pull-right
+					span.icon-plus-sign.icon
+					span Add Movie
 			caption 動画一覧
 			thead
 				tr

@@ -30,7 +30,7 @@ $(document).ready(function(){
 
 // customize the account settings form //
 	
-	$('#account-form h1').text('Account Settings');
+	$('#account-form h1').text('アカウント設定');
 	$('#account-form #sub1').text('Here are the current settings for your account.');
 	$('#user-tf').attr('disabled', 'disabled');
 	$('#account-form-btn1').html('Delete');
@@ -40,8 +40,8 @@ $(document).ready(function(){
 // setup the confirm window that displays when the user chooses to delete their account //
 
 	$('.modal-confirm').modal({ show : false, keyboard : true, backdrop : true });
-	$('.modal-confirm .modal-header h3').text('Delete Account');
-	$('.modal-confirm .modal-body p').html('Are you sure you want to delete your account?');
+	$('.modal-confirm .modal-header h3').text('アカウントの削除');
+	$('.modal-confirm .modal-body p').html('本当に削除してよろしいですか？');
 	$('.modal-confirm .cancel').html('Cancel');
 	$('.modal-confirm .submit').html('Delete');
 	$('.modal-confirm .submit').addClass('btn-danger');
